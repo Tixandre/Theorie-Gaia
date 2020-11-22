@@ -43,11 +43,11 @@ function createChart(width, height, outline, location, world, data) {
             .selectAll("path")
             .data(countries.features)
             .join("path")
-            .attr("fill", d => color(data.get(d.properties.name)))
+            .attr("fill", d => color(data.get(d.properties.iso)))
             .attr("d", path)
             .append("title")
             .text(d => `${d.properties.name}
-      ${data.has(d.properties.name) && data.get(d.properties.name) != "-" ? data.get(d.properties.name) : "N/A"}`);
+      ${data.has(d.properties.iso) && data.get(d.properties.iso) != "-" ? data.get(d.properties.iso) : "N/A"}`);
 
         g.append("path")
             .datum(topojson.mesh(world, world.objects.countries, (a, b) => a !== b))
@@ -61,13 +61,20 @@ function createChart(width, height, outline, location, world, data) {
             .attr("fill", "none")
             .attr("stroke", "black");
 
+//        svg.selectAll("path")
+//            .data(countries)
+//.console.log()
+
         return svg.node();
     }
 }
 
 async function fetchFiles() {
     world = await ((await fetch('countries-50m.json')).json());
-    dataFromFile = await ((await fetch('hale.json')).json());
+    dataFromFile = await ((await fetch('../datasets/temperatures.json')).json());
+    console.log(dataFromFile)
+    dataFromFile = dataFromFile[1363].data;
+    
     return [world, dataFromFile];
 }
 
@@ -86,42 +93,8 @@ function test() {
         height = createHeight(width, outline, projection);
         path = d3.geoPath(projection);
 
-        // Array to rename from old to new name
-        // New name => name from country-50m.json
-        rename = new Map([
-            ["Antigua and Barbuda", "Antigua and Barb."],
-            ["Bolivia (Plurinational State of)", "Bolivia"],
-            ["Bosnia and Herzegovina", "Bosnia and Herz."],
-            ["Brunei Darussalam", "Brunei"],
-            ["Central African Republic", "Central African Rep."],
-            ["Cook Islands", "Cook Is."],
-            ["Democratic People's Republic of Korea", "North Korea"],
-            ["Democratic Republic of the Congo", "Dem. Rep. Congo"],
-            ["Dominican Republic", "Dominican Rep."],
-            ["Equatorial Guinea", "Eq. Guinea"],
-            ["Iran (Islamic Republic of)", "Iran"],
-            ["Lao People's Democratic Republic", "Laos"],
-            ["Marshall Islands", "Marshall Is."],
-            ["Micronesia (Federated States of)", "Micronesia"],
-            ["Republic of Korea", "South Korea"],
-            ["Republic of Moldova", "Moldova"],
-            ["Russian Federation", "Russia"],
-            ["Saint Kitts and Nevis", "St. Kitts and Nevis"],
-            ["Saint Vincent and the Grenadines", "St. Vin. and Gren."],
-            ["Sao Tome and Principe", "São Tomé and Principe"],
-            ["Solomon Islands", "Solomon Is."],
-            ["South Sudan", "S. Sudan"],
-            ["Swaziland", "eSwatini"],
-            ["Syrian Arab Republic", "Syria"],
-            ["The former Yugoslav Republic of Macedonia", "Macedonia"],
-            // ["Tuvalu", ?],
-            ["United Republic of Tanzania", "Tanzania"],
-            ["Venezuela (Bolivarian Republic of)", "Venezuela"],
-            ["Viet Nam", "Vietnam"]
-        ])
-
         // Data to show => transform json object to map with new names
-        data = Object.assign(new Map(Object.entries(dataFromFile).map(([k, v]) => [rename.get(k) || k, v])), {
+        data = Object.assign(new Map(Object.entries(dataFromFile).map(([k, v]) => [k, v])), {
             title: "Healthy life expectancy (years)"
         })
 
