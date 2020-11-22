@@ -1,29 +1,34 @@
 # Fonction à implémenter
 
- [*] Avoir la température entre deux dates en fonction d'un pays 
- ```json
+ [x] Avoir la température entre deux dates en fonction d'un pays
+
+ ```js
 [{
-   "Date": 1999-01-01,
-   "Temp": "15",
+   date: "1999-01-01",
+   temp: 14.4,
 },...]
 ```
+
  [] Avoir le nombre de catastrophe du pays entre deux dates
-  ```json
+
+  ```js
 [{
-   "Date": 1999-01-01,
-   "Cata": "15",
+   date: "1999-01-01",
+   disa: 15,
 },...]
 ```
- [] Avoir le CO2 entre deux dates
-   ```json
+
+ [x] Avoir le CO2 entre deux dates
+
+   ```js
 [{
-   "Date": 1999-01-01,
-   "CO²": "15",
+   date: "1999-01-01",
+   co2: 135.54,
 },...]
 ```
 
 (Je fais un truc global ?)
- [] Avoir la température entre deux dates (moyenne mondiale)
+ [x] Avoir la température entre deux dates (moyenne mondiale)
  [] Avoir le nombre de catastrophe monde entre deux dates
 
 
@@ -38,6 +43,6 @@
 <script src="./temperatures.js"></script>
 <script src="./data.js"></script>
 <script>
-   let temp = getTemperatures("CHE", "1900-01-01", "2000-01-01");
+   let temp = getTemperaturesByCountry("CHE", "1900-01-01", "2000-01-01");
 </script>
  ```
