@@ -1,8 +1,26 @@
 # Fonction à implémenter
 
  [*] Avoir la température entre deux dates en fonction d'un pays 
+ ```json
+[{
+   "Date": 1999-01-01,
+   "Temp": "15",
+},...]
+```
  [] Avoir le nombre de catastrophe du pays entre deux dates
+  ```json
+[{
+   "Date": 1999-01-01,
+   "Cata": "15",
+},...]
+```
  [] Avoir le CO2 entre deux dates
+   ```json
+[{
+   "Date": 1999-01-01,
+   "CO²": "15",
+},...]
+```
 
 (Je fais un truc global ?)
  [] Avoir la température entre deux dates (moyenne mondiale)
