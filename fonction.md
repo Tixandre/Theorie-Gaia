@@ -9,7 +9,7 @@
 },...]
 ```
 
- [] Avoir le nombre de catastrophe du pays entre deux dates
+ [x] Avoir le nombre de catastrophe du pays entre deux dates
 
   ```js
 [{
@@ -29,7 +29,7 @@
 
 (Je fais un truc global ?)
  [x] Avoir la température entre deux dates (moyenne mondiale)
- [] Avoir le nombre de catastrophe monde entre deux dates
+ [x] Avoir le nombre de catastrophe monde entre deux dates
 
 
  # Utilisation des fonctions
