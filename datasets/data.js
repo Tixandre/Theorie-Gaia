@@ -7,6 +7,14 @@ function getMonth(dt) {
 function getYear(dt) {
     return dt.split("-")[0];
 }
+function mapDisasterTypes(d) {
+    let sg = dataDisasterTypes.find(x => x.id == d.subgroup) || { name: "", types: [] };
+    let t = sg.types.find(x => x.id == d.type) || { name: "", subtypes: [] };
+    d.subgroup = sg.name;
+    d.type = t.name;
+    d.subtype = (t.subtypes.find(x => x.id == d.subtype) || { name: "" }).name;
+    return d;
+}
 
 
 /**
@@ -77,7 +85,7 @@ function getDisastersByCountry(isoCode, dateFrom, dateTo) {
 /**
  * Returns the disasters in a specified country during a specified month
  * 
- * Needs ```disasters.js```
+ * Needs ```disasters.js``` and ```disasters_types.js```
  * 
  * @param {string} date Date in the given month
  * @param {string} isoCode Country ISO-3 code. If not given, return the disasters for all countries.
@@ -85,7 +93,7 @@ function getDisastersByCountry(isoCode, dateFrom, dateTo) {
  */
 function getDisastersByMonth(date, isoCode = undefined) {
     let m = getMonth(date);
-    let data = dataDisasters.filter(d => getMonth(d.dt) == m && (isoCode == undefined || d.ISO == isoCode)).reduce(function(rv, x) {
+    let data = dataDisasters.filter(d => getMonth(d.dt) == m && (isoCode == undefined || d.ISO == isoCode)).map(mapDisasterTypes).reduce(function(rv, x) {
         (rv[x.ISO] = rv[x.ISO] || []).push(x);
         return rv;
       }, {});
