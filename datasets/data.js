@@ -4,6 +4,9 @@ function getMonth(dt) {
     let sp = dt.split("-");
     return sp[0] + "-" + sp[1].padStart(2, '0');
 }
+function getYear(dt) {
+    return dt.split("-")[0];
+}
 
 
 /**
@@ -37,6 +40,21 @@ function getCO2(dateFrom, dateTo) {
     });
 }
 
+/**
+ * Returns the global CO2 level at a specified month
+ * 
+ * Needs ```co2.js```
+ * 
+ * @param {string} date Date in the given month
+ * @returns A float
+ */
+function getCO2ByMonth(date) {
+    let m = getMonth(date);
+    let y = getYear(date);
+    let comp = (m < "1958-03" ? c => { return getYear(c.dt) == y} : c => { return getMonth(c.dt) == m});
+
+    return dataCO2.find(comp).value;
+}
 
 /**
  * Returns the number of disasters in a specified country between two dates
@@ -62,13 +80,30 @@ function getDisastersByCountry(isoCode, dateFrom, dateTo) {
  * Needs ```disasters.js```
  * 
  * @param {string} date Date in the given month
- * @returns An array of objects ```[{ date: "1900-01-01", temp: 25.5 }]```
+ * @param {string} isoCode Country ISO-3 code. If not given, return the disasters for all countries.
+ * @returns An array of objects ```[{ dt: "1900-01-01", subgroup: "0", ... }]``` if isoCode specified, else an object ```{ "CHE": [{ dt: "1900-01-01", subgroup: "0", ... }], "IND": ... }```
  */
-function getDisastersByMonth(date) {
-    return dataDisasters.filter(d => getMonth(d.dt) == getMonth(date)).reduce(function(rv, x) {
+function getDisastersByMonth(date, isoCode = undefined) {
+    let m = getMonth(date);
+    let data = dataDisasters.filter(d => getMonth(d.dt) == m && (isoCode == undefined || d.ISO == isoCode)).reduce(function(rv, x) {
         (rv[x.ISO] = rv[x.ISO] || []).push(x);
         return rv;
       }, {});
+
+    return (isoCode == undefined ? data : data[isoCode]);
+}
+
+/**
+ * Returns the temperatures at a specified month
+ * 
+ * Needs ```temperatures.js```
+ * 
+ * @param {string} date Date in the given month
+ * @returns An object ```{ "CHE": 12.6, "IND": 35.1, ... }]```
+ */
+function getTemperaturesByMonth(date) {
+    let m = getMonth(date);
+    return dataTemperatures.find(t => getMonth(t.dt) == m).data;
 }
 
 /**
