@@ -72,14 +72,22 @@ function getCO2ByMonth(date) {
  * @param {string} isoCode Country ISO-3 code
  * @param {string} dateFrom Date range start, included
  * @param {string} dateTo Date range stop, included
- * @returns An object ```{"1900-01": 5, "1900-04": 1, ... }```
+ * @returns An array of objects ```[{ date: "1900-01", disa: 5 }, { date: "1900-04", disa: 1 }]```
  */
 function getDisastersByCountry(isoCode, dateFrom, dateTo) {
-    return dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && d.ISO == isoCode).reduce(function(rv, x) {
+    let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && d.ISO == isoCode).reduce(function(rv, x) {
         let m = getMonth(x.dt);
         rv[m] = (rv[m] || 0) + 1;
         return rv;
       }, {});
+
+      let res = [];
+      for (const date in data) {
+          if (data.hasOwnProperty(date)) {
+              res.push({date: date, disa: data[date]});
+          }
+      }
+      return res;
 }
 
 /**
