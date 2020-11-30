@@ -44,10 +44,10 @@
                         <a class="nav-link" href="#">A propos</a>
                     </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Rechercher..." aria-label="Search" list="country">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Go !</button>
-                    <datalist id="country">
+                <div class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" id="country" placeholder="Rechercher..." aria-label="Search" list="listCountry">
+                    <button class="btn btn-outline-success my-2 my-sm-0" onclick="refresh()">Go !</button>
+                    <datalist id="listCountry">
                         <option value="AFG">Afghanistan</option>
                         <option value="ALA">Åland Islands</option>
                         <option value="ALB">Albania</option>
@@ -298,7 +298,7 @@
                         <option value="ZMB">Zambia</option>
                         <option value="ZWE">Zimbabwe</option>
                     </datalist>
-                </form>
+                </div>
             </div>
         </nav>
     </header>
@@ -344,11 +344,33 @@
 <script src="./datasets/data.js"></script>
 <script>
     $("#ex2").slider({});
+
+    var lastVal = 0;
+
+    var refresh = function() {
+        let country = $("#country").val() !== "" ? $("#country").val() : "CHE";
+        let val = slider.getValue();
+        if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0) {
+            let temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+            let disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+            let co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+
+            d3.selectAll("g > *").remove()
+
+            drawTempVSDis(temp, disaster);
+            drawTempVSCO2(temp, co2);
+        }
+        lastVal = val;
+    }
+
+    var slider = $("#ex2").slider()
+        .on('slide', refresh)
+        .data('slider');
 </script>
 <script>
-    let temp = getTemperaturesByCountry("CHE", "1900-01-01", "2000-01-01");
-    let disaster = getDisastersByCountry("CHE", "1900-01-01", "2000-01-01");
-    let co2 = getCO2("1900-01-01", "2000-01-01");
+    let temp = getTemperaturesByCountry("CHE", "1980-01-01", "2000-01-01");
+    let disaster = getDisastersByCountry("CHE", "1980-01-01", "2000-01-01");
+    let co2 = getCO2("1980-01-01", "2000-01-01");
 </script>
 <script>
     // set the dimensions and margins of the graph
@@ -361,20 +383,25 @@
         width = 1260 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
-    // parse the date / time
-    var parseTime = d3.timeParse("%Y");
-
     // set the ranges
     var x = d3.scaleTime().range([0, width]);
     var y = d3.scaleLinear().range([height, 0]);
 
     // define the line
-    var valueline = d3.line()
+    var lineTemperature = d3.line()
         .x(function(d) {
             return x(d.date);
         })
         .y(function(d) {
             return y(d.temp);
+        });
+
+    var lineDisaster = d3.line()
+        .x(function(d) {
+            return x(d.date);
+        })
+        .y(function(d) {
+            return y(d.disa);
         });
 
     // append the svg obgect to the body of the page
@@ -387,7 +414,7 @@
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    function draw(data, dataset) {
+    function drawTempVSDis(data, dataset) {
 
         // format the data
         data.forEach(function(d) {
@@ -395,12 +422,11 @@
             d.temp = +d.temp;
         });
 
-        //console.log(dataset);
 
-        // dataset.forEach(function(d) {
-        //     d.date = new Date(d.date);
-        //     d.nbDis = +d.nbDis;
-        // });
+        dataset.forEach(function(d) {
+            d.date = new Date(d.date);
+            d.disa = +d.disa;
+        });
 
         // Scale the range of the data
         x.domain(d3.extent(data, function(d) {
@@ -411,30 +437,33 @@
             return Math.max(d.temp);
         });
         let MaxDis = d3.max(dataset, function(d) {
-            return Math.max(d.dis);
+            return Math.max(d.disa);
         });
-        console.log(MaxTemp);
 
         let Max = (MaxDis < MaxTemp ? MaxTemp : MaxDis);
 
         y.domain([0, Max]);
 
+
         // Add the valueline path.
         svg.append("path")
             .data([data])
             .attr("class", "line-1")
-            .attr("d", valueline);
+            .attr("d", lineTemperature);
         // Add the valueline path.
-        console.log(dataset);
-        svg.selectAll("circle")
-            .data(data)
+        svg.selectAll("circle") // No longer "rect"
+            .data(dataset)
             .enter()
-            .append("circle")
-            // Ajout perso des valeurs en tooltip
-            // .append("svg:title")
-            // .text(function(d) {
-            //     return d[0] + "," + d[1];
-            // });
+            .append("circle") // No longer "rect"
+            .style("fill", "red")
+            .attr("cx", function(d) {
+                return x(d.date);
+            })
+            .attr("cy", function(d) {
+                return y(d.disa);
+            })
+            .attr("r", 5);
+
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
@@ -443,36 +472,11 @@
         svg.append("g")
             .call(d3.axisLeft(y));
     }
-    draw(temp, disaster);
+    drawTempVSDis(temp, disaster);
 </script>
 <script>
-    // set the dimensions and margins of the graph
-    var margin = {
-            top: 20,
-            right: 20,
-            bottom: 30,
-            left: 50
-        },
-        width = 1260 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
-
-    // parse the date / time
-    var parseTime = d3.timeParse("%Y");
-
-    // set the ranges
-    var x = d3.scaleTime().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
-
     // define the line
-    var valueline = d3.line()
-        .x(function(d) {
-            return x(d.date);
-        })
-        .y(function(d) {
-            return y(d.temp);
-        });
-    // define the line
-    var valueline2 = d3.line()
+    var lineco2 = d3.line()
         .x(function(d) {
             return x(d.date);
         })
@@ -483,14 +487,14 @@
     // append the svg obgect to the body of the page
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
-    var svg = d3.select("#temp_co2").append("svg")
+    var svg2 = d3.select("#temp_co2").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    function draw(data, co2) {
+    function drawTempVSCO2(data, co2) {
         // format the data
         data.forEach(function(d) {
             d.date = new Date(d.date);
@@ -515,30 +519,29 @@
         });
         let Max = (MaxCO2 < MaxTemp ? MaxTemp : MaxCO2);
 
-        console.log(Max);
         y.domain([0, Max]);
 
         // Add the valueline path.
-        svg.append("path")
+        svg2.append("path")
             .data([data])
             .attr("class", "line-1")
-            .attr("d", valueline);
+            .attr("d", lineTemperature);
         // Add the valueline path.
-        svg.append("path")
+        svg2.append("path")
             .data([co2])
             .attr("class", "line-2")
-            .attr("d", valueline2);
+            .attr("d", lineco2);
         // Add the X Axis
-        svg.append("g")
+        svg2.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
 
         // Add the Y Axis
-        svg.append("g")
+        svg2.append("g")
             .call(d3.axisLeft(y));
     }
     // Get the data
-    draw(temp, co2);
+    drawTempVSCO2(temp, co2);
 </script>
 
 </html>
