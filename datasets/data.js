@@ -16,6 +16,32 @@ function mapDisasterTypes(d) {
     return d;
 }
 
+/**
+ * Calculate the temperature trend on an annual basis
+ * 
+ * @param {array} temperatures An array of objects containing temperatures
+ * @returns An array of objects ```[{ date: "1900-01-01", temp: 25.5 }]```
+ */
+function getTemperatureTrend(temperatures) {
+    let data = temperatures.reduce(function(rv, x) {
+        let y = getYear(x.date);
+        let d = (rv[y] || { t: 0, n: 0});
+        d.t += x.temp;
+        d.n += 1;
+        rv[y] = d;
+        return rv;
+      }, {});
+
+    let res = [];
+    for (const y in data) {
+        if (data.hasOwnProperty(y)) {
+            let d = data[y];
+            res.push({ date: y, temp: (d.t/d.n) });
+        }
+    }
+    return res;
+}
+
 
 /**
  * Returns the temperatures between two dates in a specified country
@@ -72,11 +98,11 @@ function getCO2ByMonth(date) {
  * @param {string} isoCode Country ISO-3 code
  * @param {string} dateFrom Date range start, included
  * @param {string} dateTo Date range stop, included
- * @returns An array of objects ```[{ date: "1900-01", disa: 5 }, { date: "1900-04", disa: 1 }]```
+ * @returns An array of objects ```[{ date: "1900", disa: 5 }, { date: "1901", disa: 1 }]```
  */
 function getDisastersByCountry(isoCode, dateFrom, dateTo) {
     let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && d.ISO == isoCode).reduce(function(rv, x) {
-        let m = getMonth(x.dt);
+        let m = getYear(x.dt);
         rv[m] = (rv[m] || 0) + 1;
         return rv;
       }, {});
@@ -133,7 +159,7 @@ function getTemperaturesByMonth(date) {
  */
 function getDisasters(dateFrom, dateTo) {
     let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo).reduce(function(rv, x) {
-        let m = getMonth(x.dt);
+        let m = getYear(x.dt);
         rv[m] = (rv[m] || 0) + 1;
         return rv;
       }, {});
