@@ -25,7 +25,7 @@ function createHeight(width, projection) {
     return dy;
 }
 
-function createChart(width, height, location, world, data) {
+function createChart(width, height, world, data) {
     {
         const svg = d3.create("svg")
             .style("display", "block")
@@ -40,13 +40,10 @@ function createChart(width, height, location, world, data) {
         defs.append("clipPath")
             .attr("id", "clip")
             .append("use")
-            .attr("xlink:href", new URL("#outline", location));
 
         const g = svg.append("g")
-            .attr("clip-path", `url(${new URL("#clip", location)})`);
 
         g.append("use")
-            .attr("xlink:href", new URL("#outline", location))
             .attr("fill", "white");
 
         g.append("g")
@@ -67,13 +64,8 @@ function createChart(width, height, location, world, data) {
             .attr("d", path);
 
         svg.append("use")
-            .attr("xlink:href", new URL("#outline", location))
             .attr("fill", "none")
             .attr("stroke", "black");
-
-        //        svg.selectAll("path")
-        //            .data(countries)
-        //.console.log()
 
         return svg.node();
     }
@@ -87,9 +79,7 @@ function getData(date) {
     data = Object.assign(new Map(Object.entries(dataFromFile).map(([k, v]) => [k, v])), {
         title: "Healthy life expectancy (years)"
     })
-
     return data;
-
 }
 
 function showLegend() {
@@ -97,9 +87,10 @@ function showLegend() {
 
     svg.append("g")
         .attr("class", "legendLinear")
-        .attr("transform", "translate(0,0)");
+        .attr("transform", "translate(0,20)");
 
     var legendLinear = d3.legendColor()
+        .title("Temperature hue [°C]")
         .labelFormat(d3.format("d"))
         .labelOffset(3)
         .shapeWidth(15)
@@ -122,9 +113,8 @@ function init() {
         height = createHeight(width, projection);
         path = d3.geoPath(projection);
 
-        
         let data = getData("1900-01-01");
-        chart = createChart(width, height, "http://localhost:8080/", world, data);
+        chart = createChart(width, height, world, data);
         document.body.append(chart);
         showLegend();
     })
@@ -139,7 +129,7 @@ function update() {
     let data = getData(annee + "-01-01");
 
     // Show new data
-    chart = createChart(width, height, "http://localhost:8080/", world, data);
+    chart = createChart(width, height, world, data);
     document.body.append(chart);
     showLegend();
 }
