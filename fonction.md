@@ -48,3 +48,14 @@
    let temp = getTemperaturesByCountry("CHE", "1900-01-01", "2000-01-01");
 </script>
  ```
+
+TODO : 
+ - [] Filtre des catastrophes pour map et graphs
+ - [] Mise en page générale
+ - [] Uniformiser la langue (en)
+ - [] Page A propos et README (même contenu)
+ - [] légendes graphs et map
+ - [] click pays redirige vers tendance
+ - [] droite de tendance pour temperature
+ - [] intégrer map to site
+ - [] organiser le site avec index.html (théorie Gaia)
