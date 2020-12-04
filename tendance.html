@@ -48,6 +48,7 @@
                     <input class="form-control mr-sm-2" type="search" id="country" placeholder="Rechercher..." aria-label="Search" list="listCountry">
                     <button class="btn btn-outline-success my-2 my-sm-0" onclick="refresh()">Go !</button>
                     <datalist id="listCountry">
+                        <option value="WRD">World</option>
                         <option value="AFG">Afghanistan</option>
                         <option value="ALA">Åland Islands</option>
                         <option value="ALB">Albania</option>
@@ -351,9 +352,15 @@
         let country = $("#country").val() !== "" ? $("#country").val() : "CHE";
         let val = slider.getValue();
         if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0) {
-            let temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
-            let disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
-            let co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            if(country == "WRD"){
+                temp = getTemperatures(val[0] + "-01-01", val[1] + "-01-01");
+                disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01");
+                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            } else {
+                temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+                disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            }
 
             d3.selectAll("g > *").remove()
 
@@ -385,7 +392,9 @@
 
     // set the ranges
     var x = d3.scaleTime().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
+    var y0 = d3.scaleLinear().range([height, 0]);
+    var y1 = d3.scaleLinear().range([height, 0]);
+
 
     // define the line
     var lineTemperature = d3.line()
@@ -393,7 +402,7 @@
             return x(d.date);
         })
         .y(function(d) {
-            return y(d.temp);
+            return y0(d.temp);
         });
 
     var lineDisaster = d3.line()
@@ -401,7 +410,7 @@
             return x(d.date);
         })
         .y(function(d) {
-            return y(d.disa);
+            return y1(d.disa);
         });
 
     // append the svg obgect to the body of the page
@@ -432,18 +441,14 @@
         x.domain(d3.extent(data, function(d) {
             return d.date;
         }));
-
-        let MaxTemp = d3.max(data, function(d) {
-            return Math.max(d.temp);
-        });
+        
         let MaxDis = d3.max(dataset, function(d) {
             return Math.max(d.disa);
         });
 
-        let Max = (MaxDis < MaxTemp ? MaxTemp : MaxDis);
 
-        y.domain([0, Max]);
-
+        y0.domain([-30, 60]);
+        y1.domain([0, MaxDis]);
 
         // Add the valueline path.
         svg.append("path")
@@ -460,7 +465,7 @@
                 return x(d.date);
             })
             .attr("cy", function(d) {
-                return y(d.disa);
+                return y1(d.disa);
             })
             .attr("r", 5);
 
@@ -470,7 +475,9 @@
 
         // Add the Y Axis
         svg.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y0));
+        svg.append("g")
+            .call(d3.axisRight(y1));
     }
     drawTempVSDis(temp, disaster);
 </script>
@@ -481,7 +488,7 @@
             return x(d.date);
         })
         .y(function(d) {
-            return y(d.co2);
+            return y1(d.co2);
         });
 
     // append the svg obgect to the body of the page
@@ -510,16 +517,13 @@
         x.domain(d3.extent(data, function(d) {
             return d.date;
         }));
-
-        let MaxTemp = d3.max(data, function(d) {
-            return Math.max(d.temp);
-        });
+        
         let MaxCO2 = d3.max(co2, function(d) {
             return Math.max(d.co2);
         });
-        let Max = (MaxCO2 < MaxTemp ? MaxTemp : MaxCO2);
 
-        y.domain([0, Max]);
+        y0.domain([-30, 60]);
+        y1.domain([0, MaxCO2]);
 
         // Add the valueline path.
         svg2.append("path")
@@ -538,7 +542,9 @@
 
         // Add the Y Axis
         svg2.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y0));
+        svg2.append("g")
+            .call(d3.axisRight(y1));
     }
     // Get the data
     drawTempVSCO2(temp, co2);
