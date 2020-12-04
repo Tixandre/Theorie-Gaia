@@ -441,21 +441,13 @@
         x.domain(d3.extent(data, function(d) {
             return d.date;
         }));
-
-        let MaxTemp = d3.max(data, function(d) {
-            return Math.max(d.temp);
-        });
-        
-        let MinTemp = d3.min(data, function(d) {
-            return Math.min(d.temp);
-        });
         
         let MaxDis = d3.max(dataset, function(d) {
             return Math.max(d.disa);
         });
 
 
-        y0.domain([MinTemp, MaxTemp]);
+        y0.domain([-30, 60]);
         y1.domain([0, MaxDis]);
 
         // Add the valueline path.
@@ -525,20 +517,12 @@
         x.domain(d3.extent(data, function(d) {
             return d.date;
         }));
-
-        let MaxTemp = d3.max(data, function(d) {
-            return Math.max(d.temp);
-        });
-        
-        let MinTemp = d3.min(data, function(d) {
-            return Math.min(d.temp);
-        });
         
         let MaxCO2 = d3.max(co2, function(d) {
             return Math.max(d.co2);
         });
 
-        y0.domain([MinTemp, MaxTemp]);
+        y0.domain([-30, 60]);
         y1.domain([0, MaxCO2]);
 
         // Add the valueline path.
