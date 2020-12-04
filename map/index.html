@@ -6,14 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
     <!--<script src="https://unpkg.com/d3-require@1"></script>-->
     <!--<script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>-->
+    <script src="../datasets/temperatures.js"></script>
+    <script src="../datasets/data.js"></script>
     <script src="script.js"></script>
+    <style>
+        .label {
+            font-size: 6pt;
+        }
+        .legendTitle {
+            font-size: 8pt;
+        }
+    </style>
 </head>
 
 <body>
-    <button onclick="test2()">Change</button>
+    <input type="range" min="1900" max="2013" id="annee" onchange="update()">
 </body>
 
 </html>

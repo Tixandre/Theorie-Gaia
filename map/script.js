@@ -1,10 +1,20 @@
 var dataFromFile;
 var width;
 var height;
-var outline;
 var world;
 
-function createHeight(width, outline, projection) {
+// Color to the graph
+const colorScale = d3.scaleSequential()
+    .domain(d3.extent([-30, 60] /*Array.from(data.values())*/ ))
+    //.interpolator(d3.interpolateYlGnBu)
+    .range(["blue", "red"])
+    .unknown("#ccc");
+
+const outline = ({
+    type: "Sphere"
+});
+
+function createHeight(width, projection) {
     const [
         [x0, y0],
         [x1, y1]
@@ -15,7 +25,7 @@ function createHeight(width, outline, projection) {
     return dy;
 }
 
-function createChart(width, height, outline, location, world, data) {
+function createChart(width, height, world, data) {
     {
         const svg = d3.create("svg")
             .style("display", "block")
@@ -30,20 +40,17 @@ function createChart(width, height, outline, location, world, data) {
         defs.append("clipPath")
             .attr("id", "clip")
             .append("use")
-            .attr("xlink:href", new URL("#outline", location));
 
         const g = svg.append("g")
-            .attr("clip-path", `url(${new URL("#clip", location)})`);
 
         g.append("use")
-            .attr("xlink:href", new URL("#outline", location))
             .attr("fill", "white");
 
         g.append("g")
             .selectAll("path")
             .data(countries.features)
             .join("path")
-            .attr("fill", d => color(data.get(d.properties.iso)))
+            .attr("fill", d => colorScale(data.get(d.properties.iso)))
             .attr("d", path)
             .append("title")
             .text(d => `${d.properties.name}
@@ -57,71 +64,73 @@ function createChart(width, height, outline, location, world, data) {
             .attr("d", path);
 
         svg.append("use")
-            .attr("xlink:href", new URL("#outline", location))
             .attr("fill", "none")
             .attr("stroke", "black");
-
-//        svg.selectAll("path")
-//            .data(countries)
-//.console.log()
 
         return svg.node();
     }
 }
 
-async function fetchFiles() {
-    world = await ((await fetch('countries-50m.json')).json());
-    dataFromFile = await ((await fetch('../datasets/temperatures.json')).json());
-    console.log(dataFromFile)
-    dataFromFile = dataFromFile[1363].data;
-    
-    return [world, dataFromFile];
+
+function getData(date) {
+    dataFromFile = getTemperaturesByMonth(date);
+
+    // Data to show => transform json object to map with new names
+    data = Object.assign(new Map(Object.entries(dataFromFile).map(([k, v]) => [k, v])), {
+        title: "Healthy life expectancy (years)"
+    })
+    return data;
 }
 
-function test() {
-    fetchFiles().then(([world, dataFromFile]) => {
+function showLegend() {
+    var svg = d3.select("svg");
+
+    svg.append("g")
+        .attr("class", "legendLinear")
+        .attr("transform", "translate(0,20)");
+
+    var legendLinear = d3.legendColor()
+        .title("Temperature hue [°C]")
+        .labelFormat(d3.format("d"))
+        .labelOffset(3)
+        .shapeWidth(15)
+        .shapeHeight(8)
+        .cells(10)
+        .orient('horizontal')
+        .scale(colorScale);
+
+    svg.select(".legendLinear")
+        .call(legendLinear);
+}
+
+function init() {
+    fetch('countries-50m.json').then(x => x.json()).then(x => {
+
+        world = x;
         countries = topojson.feature(world, world.objects.countries);
-
-        outline = ({
-            type: "Sphere"
-        })
-
         width = 975;
-
         projection = d3.geoMercator();
-
-        height = createHeight(width, outline, projection);
+        height = createHeight(width, projection);
         path = d3.geoPath(projection);
 
-        // Data to show => transform json object to map with new names
-        data = Object.assign(new Map(Object.entries(dataFromFile).map(([k, v]) => [k, v])), {
-            title: "Healthy life expectancy (years)"
-        })
-
-        // Color to the graph
-        color = d3.scaleSequential()
-            .domain(d3.extent(Array.from(data.values())))
-            //.interpolator(d3.interpolateYlGnBu)
-            .range(["blue", "red"])
-            .unknown("#ccc")
-
-        chart = createChart(width, height, outline, "http://localhost:8080/", world, data);
+        let data = getData("1900-01-01");
+        chart = createChart(width, height, world, data);
         document.body.append(chart);
+        showLegend();
     })
 }
 
-function test2() {
+function update() {
     // Delete old map
     d3.select("svg").remove();
 
-    // Change data
-    newData = new Map();
-    data.forEach((v, k) => {
-        newData.set(k, v - 5);
-    });
+    let annee = document.getElementById("annee").value;
+
+    let data = getData(annee + "-01-01");
 
     // Show new data
-    chart = createChart(width, height, outline, "http://localhost:8080/", world, newData);
+    chart = createChart(width, height, world, data);
     document.body.append(chart);
+    showLegend();
 }
-test();
+init();
