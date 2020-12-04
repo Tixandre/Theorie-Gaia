@@ -4296,15 +4296,39 @@
                     ],
                     [
                         [1314]
-                    ],
-                    [
-                        [-386, 1315, 1316]
                     ]
                 ],
                 "id": "250",
                 "properties": {
                     "name": "France",
                     "iso" : "FRA"
+                }
+            }, {
+                "type": "MultiPolygon",
+                "arcs": [
+                    [
+                        [1317]
+                    ],
+                    [
+                        [1318]
+                    ]
+                ],
+                "id": "666",
+                "properties": {
+                    "name": "St. Pierre and Miquelon",
+                    "iso" : "SPM"
+                }
+            }, {
+                "type": "MultiPolygon",
+                "arcs": [
+                    [
+                        [-386, 1315, 1316]
+                    ]
+                ],
+                "id": "250",
+                "properties": {
+                    "name": "French Guyana",
+                    "iso" : "GUF"
                 }
             }, {
                 "type": "MultiPolygon",
