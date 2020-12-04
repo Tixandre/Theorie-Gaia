@@ -436,13 +436,18 @@
         let MaxTemp = d3.max(data, function(d) {
             return Math.max(d.temp);
         });
+        
+        let MinTemp = d3.min(data, function(d) {
+            return Math.min(d.temp);
+        });
+        
         let MaxDis = d3.max(dataset, function(d) {
             return Math.max(d.disa);
         });
 
         let Max = (MaxDis < MaxTemp ? MaxTemp : MaxDis);
 
-        y.domain([0, Max]);
+        y.domain([MinTemp, Max]);
 
 
         // Add the valueline path.
@@ -514,12 +519,17 @@
         let MaxTemp = d3.max(data, function(d) {
             return Math.max(d.temp);
         });
+        
+        let MinTemp = d3.min(data, function(d) {
+            return Math.min(d.temp);
+        });
+        
         let MaxCO2 = d3.max(co2, function(d) {
             return Math.max(d.co2);
         });
         let Max = (MaxCO2 < MaxTemp ? MaxTemp : MaxCO2);
 
-        y.domain([0, Max]);
+        y.domain([MinTemp, Max]);
 
         // Add the valueline path.
         svg2.append("path")
