@@ -25,6 +25,12 @@
             stroke: slateblue;
             stroke-width: 2px;
         }
+
+        .line-3{
+            fill: none;
+            stroke: goldenrod;
+            stroke-width: 2px;
+        }
     </style>
 </head>
 
@@ -305,28 +311,34 @@
     </header>
 
     <main>
-        <form class="mr-4 ml-4">
-            <div class="text-center">
-                <label>Choisir une année</label>
-                <table class="mt-2">
-                    <tr>
-                        <td>1980</td>
-                        <td style="width: 100%;">
-                            <input id="ex2" type="text" style="width: 98%;" class="span2" value="" data-slider-min="1980" data-slider-max="2000" data-slider-step="1" data-slider-value="[1980,2020]" />
-                        </td>
-                        <td>2000</td>
-                    </tr>
-                </table>
+
+        <div class="container" style="max-width: 1260px;">
+            <form class="mr-4 ml-4">
+                <div class="text-center">
+                    <label>Choisir une année</label>
+                    <table class="mt-2">
+                        <tr>
+                            <td>1980</td>
+                            <td style="width: 100%;">
+                                <input id="ex2" type="text" style="width: 98%;" class="span2" value="" data-slider-min="1980" data-slider-max="2000" data-slider-step="1" data-slider-value="[1980,2020]" />
+                            </td>
+                            <td>2000</td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <div class="card mt-2">
+                <h1 class="p-2">Correlation de la température et du nombre de catastrophe en fonction du temps</h1>
+                <div id="temp_cata">
+        
+                </div>
             </div>
-
-        </form>
-        <h1>Correlation de la température et du nombre de catastrophe en fonction du temps</h1>
-        <div id="temp_cata">
-
-        </div>
-        <h1>Correlation de la température et du taux de CO2 en fonction du temps</h1>
-        <div id="temp_co2">
-
+            <div class="card mt-4">
+                <h1 class="p-2">Correlation de la température et du taux de CO2 en fonction du temps</h1>
+                <div id="temp_co2">
+        
+                </div>
+            </div>
         </div>
     </main>
     <footer class="footer-distributed">
@@ -339,7 +351,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
-<script src="./d3.legend.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 <script src="./datasets/temperatures.js"></script>
 <script src="./datasets/co2.js"></script>
 <script src="./datasets/disasters.js"></script>
@@ -355,13 +367,13 @@
         if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0) {
             if(country == "WRD"){
                 temp = getTemperatures(val[0] + "-01-01", val[1] + "-01-01");
-                disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01");
-                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+                disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01"); 
             } else {
                 temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
                 disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
-                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
             }
+            co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            trend = getTemperatureTrend(temp);
 
             d3.selectAll("g > *").remove()
 
@@ -376,15 +388,16 @@
         .data('slider');
 </script>
 <script>
-    let temp = getTemperaturesByCountry("CHE", "1980-01-01", "2000-01-01");
-    let disaster = getDisastersByCountry("CHE", "1980-01-01", "2000-01-01");
+    let temp = getTemperatures("1980-01-01", "2000-01-01");
+    let disaster = getDisasters("1980-01-01", "2000-01-01");
     let co2 = getCO2("1980-01-01", "2000-01-01");
+    let trend = getTemperatureTrend(temp);
 </script>
 <script>
     // set the dimensions and margins of the graph
     var margin = {
             top: 20,
-            right: 20,
+            right: 75,
             bottom: 30,
             left: 50
         },
@@ -413,10 +426,24 @@
         .y(function(d) {
             return y1(d.disa);
         });
+    
+    var lineTrend = d3.line()
+        .x(function(d) {
+            return x(d.date);
+        })
+        .y(function(d) {
+            return y1(d.temp);
+        });
 
-    // append the svg obgect to the body of the page
-    // appends a 'group' element to 'svg'
-    // moves the 'group' element to the top left margin
+    var ordinal = d3.scaleOrdinal()
+        .domain(["Temperature", "Nb of disaster"])
+        .range([ "steelblue", "red"]);
+
+
+    var legendOrdinal = d3.legendColor()
+        .shape("path", d3.symbol().type(d3.symbolSquare).size(150)())
+        .scale(ordinal);
+
     var svg = d3.select("#temp_cata").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -424,14 +451,17 @@
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    function drawTempVSDis(data, dataset) {
 
-        // format the data
+    function drawTempVSDis(data,trend,dataset) {
         data.forEach(function(d) {
             d.date = new Date(d.date);
             d.temp = +d.temp;
         });
 
+        trend.forEach(function(d) {
+            d.date = new Date(d.date);
+            d.temp = +d.temp;
+        });
 
         dataset.forEach(function(d) {
             d.date = new Date(d.date);
@@ -451,12 +481,16 @@
         y0.domain([-30, 60]);
         y1.domain([0, MaxDis]);
 
+
         // Add the valueline path.
         svg.append("path")
             .data([data])
             .attr("class", "line-1")
             .attr("d", lineTemperature)
-            .attr("data-legend","temperature");
+        svg.append("path")
+            .data([trend])
+            .attr("class", "line-3")
+            .attr("d", lineTrend)
         // Add the valueline path.
         svg.selectAll("circle") // No longer "rect"
             .data(dataset)
@@ -470,7 +504,6 @@
                 return y1(d.disa);
             })
             .attr("r", 5)
-            .attr("data-legend","Nb of disasters");
 
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -481,13 +514,15 @@
             .call(d3.axisLeft(y0));
         svg.append("g")
             .call(d3.axisRight(y1));
+
         svg.append("g")
-            .attr("class","legend")
-            .attr("transform","translate(50,30)")
-            .style("font-size","12px")
-            .call(d3.legend)
+            .attr("class", "legendOrdinal")
+            .attr("transform", "translate(1000,100)");
+        
+        svg.select(".legendOrdinal")
+            .call(legendOrdinal);
     }
-    drawTempVSDis(temp, disaster);
+    drawTempVSDis(temp, trend,disaster);
 </script>
 <script>
     // define the line
@@ -499,6 +534,16 @@
             return y1(d.co2);
         });
 
+
+    var ordinal = d3.scaleOrdinal()
+        .domain(["Temperature", "CO2"])
+        .range([ "steelblue", "slateblue"]);
+
+
+    var legendOrdinal = d3.legendColor()
+        .shape("path", d3.symbol().type(d3.symbolSquare).size(150)())
+        .scale(ordinal);
+    
     // append the svg obgect to the body of the page
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
@@ -509,9 +554,14 @@
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    function drawTempVSCO2(data, co2) {
+    function drawTempVSCO2(data, trend, co2) {
         // format the data
         data.forEach(function(d) {
+            d.date = new Date(d.date);
+            d.temp = +d.temp;
+        });
+
+        trend.forEach(function(d) {
             d.date = new Date(d.date);
             d.temp = +d.temp;
         });
@@ -543,6 +593,10 @@
             .data([co2])
             .attr("class", "line-2")
             .attr("d", lineco2);
+        svg.append("path")
+            .data([trend])
+            .attr("class", "line-3")
+            .attr("d", lineTrend)
         // Add the X Axis
         svg2.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -553,9 +607,16 @@
             .call(d3.axisLeft(y0));
         svg2.append("g")
             .call(d3.axisRight(y1));
+
+        svg2.append("g")
+            .attr("class", "legendOrdinal")
+            .attr("transform", "translate(1000,100)");
+        
+        svg2.select(".legendOrdinal")
+            .call(legendOrdinal);
     }
     // Get the data
-    drawTempVSCO2(temp, co2);
+    drawTempVSCO2(temp, trend, co2);
 </script>
 
 </html>

@@ -2,6 +2,7 @@ var dataFromFile;
 var width;
 var height;
 var world;
+var countries;
 
 // Color to the graph
 const colorScale = d3.scaleSequential()
@@ -14,7 +15,10 @@ const outline = ({
     type: "Sphere"
 });
 
-function createHeight(width, projection) {
+const projection = d3.geoMercator();
+const path = d3.geoPath(projection);
+
+function createHeight(width) {
     const [
         [x0, y0],
         [x1, y1]
@@ -109,9 +113,8 @@ function init() {
         world = x;
         countries = topojson.feature(world, world.objects.countries);
         width = 975;
-        projection = d3.geoMercator();
+
         height = createHeight(width, projection);
-        path = d3.geoPath(projection);
 
         let data = getData("1900-01-01");
         chart = createChart(width, height, world, data);
