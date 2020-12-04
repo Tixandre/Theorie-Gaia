@@ -496,7 +496,7 @@
             return x(d.date);
         })
         .y(function(d) {
-            return y(d.co2);
+            return y1(d.co2);
         });
 
     // append the svg obgect to the body of the page
@@ -537,9 +537,9 @@
         let MaxCO2 = d3.max(co2, function(d) {
             return Math.max(d.co2);
         });
-        let Max = (MaxCO2 < MaxTemp ? MaxTemp : MaxCO2);
 
-        y.domain([MinTemp, Max]);
+        y0.domain([MinTemp, MaxTemp]);
+        y1.domain([0, MaxCO2]);
 
         // Add the valueline path.
         svg2.append("path")
@@ -558,7 +558,9 @@
 
         // Add the Y Axis
         svg2.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y0));
+        svg2.append("g")
+            .call(d3.axisRight(y1));
     }
     // Get the data
     drawTempVSCO2(temp, co2);
