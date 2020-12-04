@@ -48,6 +48,7 @@
                     <input class="form-control mr-sm-2" type="search" id="country" placeholder="Rechercher..." aria-label="Search" list="listCountry">
                     <button class="btn btn-outline-success my-2 my-sm-0" onclick="refresh()">Go !</button>
                     <datalist id="listCountry">
+                        <option value="WRD">World</option>
                         <option value="AFG">Afghanistan</option>
                         <option value="ALA">Åland Islands</option>
                         <option value="ALB">Albania</option>
@@ -351,9 +352,18 @@
         let country = $("#country").val() !== "" ? $("#country").val() : "CHE";
         let val = slider.getValue();
         if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0) {
-            let temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
-            let disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
-            let co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            let temp;
+            let disaster;
+            let co2;
+            if(country == "WRD"){
+                temp = getTemperatures(val[0] + "-01-01", val[1] + "-01-01");
+                disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01");
+                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            } else {
+                temp = getTemperaturesByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+                disaster = getDisastersByCountry(country, val[0] + "-01-01", val[1] + "-01-01");
+                co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
+            }
 
             d3.selectAll("g > *").remove()
 
