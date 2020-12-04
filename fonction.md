@@ -59,3 +59,10 @@ TODO :
  - [] droite de tendance pour temperature
  - [] intégrer map to site
  - [] organiser le site avec index.html (théorie Gaia)
+ - [] catastrophe sur la map
+ - [] choisir le pas pour tendances
+ - [] remove last year of trend
+
+
+ Doc :
+  lien entre lieux qui se réchauffent et endroits des catastrophes
