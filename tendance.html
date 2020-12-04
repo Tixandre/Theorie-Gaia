@@ -2,11 +2,11 @@
 <html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Projet VI - Théorie de Gaïa">
+<meta name="description" content="Projet VI - Gaïa's theory">
 <meta name="author" content="Alexandre Favre">
 
 <head>
-    <title>Théorie de Gaïa - Tendance</title>
+    <title>Gaïa's theory - Tendance</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
     <link rel="stylesheet" href="gaia.css">
@@ -29,7 +29,7 @@
         .line-3{
             fill: none;
             stroke: goldenrod;
-            stroke-width: 2px;
+            stroke-width: 4px;
         }
     </style>
 </head>
@@ -37,21 +37,24 @@
 <body style="height: 100%;">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Théorie de Gaïa</a>
+            <a class="navbar-brand" href="#">Gaïa's theory</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
   <span class="navbar-toggler-icon"></span>
 </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Map world</span></a>
+                    </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Monde <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="#">Graphs <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">A propos</a>
+                        <a class="nav-link" href="#">About</a>
                     </li>
                 </ul>
                 <div class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" id="country" placeholder="Rechercher..." aria-label="Search" list="listCountry">
+                    <input class="form-control mr-sm-2" type="search" id="country" placeholder="Search..." aria-label="Search" list="listCountry">
                     <button class="btn btn-outline-success my-2 my-sm-0" onclick="refresh()">Go !</button>
                     <datalist id="listCountry">
                         <option value="WRD">World</option>
@@ -315,35 +318,44 @@
         <div class="container" style="max-width: 1260px;">
             <form class="mr-4 ml-4">
                 <div class="text-center">
-                    <label>Choisir une année</label>
+                    <h3>Choose a year</h3>
                     <table class="mt-2">
                         <tr>
-                            <td>1980</td>
+                            <td>1900</td>
                             <td style="width: 100%;">
-                                <input id="ex2" type="text" style="width: 98%;" class="span2" value="" data-slider-min="1980" data-slider-max="2000" data-slider-step="1" data-slider-value="[1980,2020]" />
+                                <input id="ex2" type="text" style="width: 98%;" class="span2" value="" data-slider-min="1900" data-slider-max="2013" data-slider-step="1" data-slider-value="[1900,2013]" />
                             </td>
-                            <td>2000</td>
+                            <td>2013</td>
                         </tr>
                     </table>
                 </div>
             </form>
             <div class="card mt-2">
-                <h1 class="p-2">Correlation de la température et du nombre de catastrophe en fonction du temps</h1>
+                <h1 class="p-2">Correlation between the temperature and the number of disasters over time</h1>
                 <div id="temp_cata">
         
                 </div>
+                <p class="text-right mr-2">Source : </p>
             </div>
             <div class="card mt-4">
-                <h1 class="p-2">Correlation de la température et du taux de CO2 en fonction du temps</h1>
+                <h1 class="p-2">Correlation between the temperature and the CO2 level in the atmosphere over time</h1>
                 <div id="temp_co2">
         
                 </div>
+                <p class="text-right mr-2">Source : </p>
+            </div>
+            <div class="card mt-4 mb-4">
+                <h1 class="p-2">Correlation between the CO2 level in the atmosphere and the number of disasters over time</h1>
+                <div id="co2_disa">
+        
+                </div>
+                <p class="text-right mr-2">Source : </p>
             </div>
         </div>
     </main>
     <footer class="footer-distributed">
         <div class="text-center">
-            <p>Théorie de Gaïa &copy; 2020. </p>
+            <p>Gaïa's theory &copy; 2020. </p>
         </div>
     </footer>
 
@@ -360,11 +372,13 @@
     $("#ex2").slider({});
 
     var lastVal = 0;
+    let change = false;
 
     var refresh = function() {
-        let country = $("#country").val() !== "" ? $("#country").val() : "CHE";
+        let country = $("#country").val() !== "" ? $("#country").val() : "WRD";
         let val = slider.getValue();
-        if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0) {
+        if (lastVal[0] != val[0] || lastVal[1] != val[1] || lastVal == 0 || change) {
+            console.log()
             if(country == "WRD"){
                 temp = getTemperatures(val[0] + "-01-01", val[1] + "-01-01");
                 disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01"); 
@@ -377,20 +391,27 @@
 
             d3.selectAll("g > *").remove()
 
-            drawTempVSDis(temp, disaster);
-            drawTempVSCO2(temp, co2);
+            drawTempVSDis(temp,trend, disaster);
+            drawTempVSCO2(temp,trend, co2);
+            drawCO2VSDis(co2, disaster);
+            change = false;
         }
         lastVal = val;
     }
+
+    $('#country').on('input',function(e){
+        change = true;
+    });
 
     var slider = $("#ex2").slider()
         .on('slide', refresh)
         .data('slider');
 </script>
 <script>
-    let temp = getTemperatures("1980-01-01", "2000-01-01");
-    let disaster = getDisasters("1980-01-01", "2000-01-01");
-    let co2 = getCO2("1980-01-01", "2000-01-01");
+    let val = slider.getValue();
+    let temp = getTemperatures(val[0] + "-01-01", val[1] + "-01-01");
+    let disaster = getDisasters(val[0] + "-01-01", val[1] + "-01-01");
+    let co2 = getCO2(val[0] + "-01-01", val[1] + "-01-01");
     let trend = getTemperatureTrend(temp);
 </script>
 <script>
@@ -409,6 +430,9 @@
     var y0 = d3.scaleLinear().range([height, 0]);
     var y1 = d3.scaleLinear().range([height, 0]);
 
+    var y2 = d3.scaleLinear().range([height, 0]);
+    var y3 = d3.scaleLinear().range([height, 0]);
+
 
     // define the line
     var lineTemperature = d3.line()
@@ -418,26 +442,18 @@
         .y(function(d) {
             return y0(d.temp);
         });
-
-    var lineDisaster = d3.line()
-        .x(function(d) {
-            return x(d.date);
-        })
-        .y(function(d) {
-            return y1(d.disa);
-        });
     
     var lineTrend = d3.line()
         .x(function(d) {
             return x(d.date);
         })
         .y(function(d) {
-            return y1(d.temp);
+            return y0(d.temp);
         });
 
     var ordinal = d3.scaleOrdinal()
-        .domain(["Temperature", "Nb of disaster"])
-        .range([ "steelblue", "red"]);
+        .domain(["Temperature", "Nb of disaster","Trend"])
+        .range([ "steelblue", "red","goldenrod"]);
 
 
     var legendOrdinal = d3.legendColor()
@@ -478,7 +494,7 @@
         });
 
 
-        y0.domain([-30, 60]);
+        y0.domain([-20, 45]);
         y1.domain([0, MaxDis]);
 
 
@@ -517,7 +533,7 @@
 
         svg.append("g")
             .attr("class", "legendOrdinal")
-            .attr("transform", "translate(1000,100)");
+            .attr("transform", "translate(1000,450)");
         
         svg.select(".legendOrdinal")
             .call(legendOrdinal);
@@ -535,14 +551,14 @@
         });
 
 
-    var ordinal = d3.scaleOrdinal()
-        .domain(["Temperature", "CO2"])
-        .range([ "steelblue", "slateblue"]);
+    var ordinal2 = d3.scaleOrdinal()
+        .domain(["Temperature", "CO2","Trend"])
+        .range([ "steelblue", "slateblue","goldenrod"]);
 
 
-    var legendOrdinal = d3.legendColor()
+    var legendOrdinal2 = d3.legendColor()
         .shape("path", d3.symbol().type(d3.symbolSquare).size(150)())
-        .scale(ordinal);
+        .scale(ordinal2);
     
     // append the svg obgect to the body of the page
     // appends a 'group' element to 'svg'
@@ -580,7 +596,8 @@
             return Math.max(d.co2);
         });
 
-        y0.domain([-30, 60]);
+
+        y0.domain([-20, 45]);
         y1.domain([0, MaxCO2]);
 
         // Add the valueline path.
@@ -593,7 +610,7 @@
             .data([co2])
             .attr("class", "line-2")
             .attr("d", lineco2);
-        svg.append("path")
+        svg2.append("path")
             .data([trend])
             .attr("class", "line-3")
             .attr("d", lineTrend)
@@ -610,13 +627,106 @@
 
         svg2.append("g")
             .attr("class", "legendOrdinal")
-            .attr("transform", "translate(1000,100)");
+            .attr("transform", "translate(1000,450)");
         
         svg2.select(".legendOrdinal")
-            .call(legendOrdinal);
+            .call(legendOrdinal2);
     }
     // Get the data
     drawTempVSCO2(temp, trend, co2);
+</script>
+<script>
+    var lineco22 = d3.line()
+        .x(function(d) {
+            return x(d.date);
+        })
+        .y(function(d) {
+            return y3(d.co2);
+        });
+
+    var ordinal2 = d3.scaleOrdinal()
+        .domain(["CO2", "Nb of disaster"])
+        .range([ "slateblue", "red"]);
+
+
+    var legendOrdinal2 = d3.legendColor()
+        .shape("path", d3.symbol().type(d3.symbolSquare).size(150)())
+        .scale(ordinal2);
+
+    var svg3 = d3.select("#co2_disa").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+    function drawCO2VSDis(data,dataset) {
+        data.forEach(function(d) {
+            d.date = new Date(d.date);
+            d.temp = +d.co2;
+        });
+
+        dataset.forEach(function(d) {
+            d.date = new Date(d.date);
+            d.disa = +d.disa;
+        });
+
+        // Scale the range of the data
+        x.domain(d3.extent(data, function(d) {
+            return d.date;
+        }));
+        
+        let MaxDis = d3.max(dataset, function(d) {
+            return Math.max(d.disa);
+        });
+
+        let MaxCO2 = d3.max(data, function(d) {
+            return Math.max(d.co2);
+        });
+
+
+        y2.domain([0, MaxDis]);
+        y3.domain([250, MaxCO2]);
+
+
+        // Add the valueline path.
+        svg3.append("path")
+            .data([data])
+            .attr("class", "line-2")
+            .attr("d", lineco22)
+        // Add the valueline path.
+        svg3.selectAll("circle") // No longer "rect"
+            .data(dataset)
+            .enter()
+            .append("circle") // No longer "rect"
+            .style("fill", "red")
+            .attr("cx", function(d) {
+                return x(d.date);
+            })
+            .attr("cy", function(d) {
+                return y2(d.disa);
+            })
+            .attr("r", 5)
+
+        svg3.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg3.append("g")
+            .call(d3.axisLeft(y2));
+        svg3.append("g")
+            .call(d3.axisRight(y3));
+
+        svg3.append("g")
+            .attr("class", "legendOrdinal")
+            .attr("transform", "translate(1000,450)");
+        
+        svg3.select(".legendOrdinal")
+            .call(legendOrdinal2);
+    }
+    drawCO2VSDis(co2, disaster);
 </script>
 
 </html>
