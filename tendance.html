@@ -454,7 +454,8 @@
         svg.append("path")
             .data([data])
             .attr("class", "line-1")
-            .attr("d", lineTemperature);
+            .attr("d", lineTemperature)
+            .attr("data-legend","temperature");
         // Add the valueline path.
         svg.selectAll("circle") // No longer "rect"
             .data(dataset)
@@ -467,7 +468,8 @@
             .attr("cy", function(d) {
                 return y1(d.disa);
             })
-            .attr("r", 5);
+            .attr("r", 5)
+            .attr("data-legend","Nb of disasters");
 
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
