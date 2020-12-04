@@ -339,6 +339,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
+<script src="./d3.legend.js"></script>
 <script src="./datasets/temperatures.js"></script>
 <script src="./datasets/co2.js"></script>
 <script src="./datasets/disasters.js"></script>
@@ -480,6 +481,11 @@
             .call(d3.axisLeft(y0));
         svg.append("g")
             .call(d3.axisRight(y1));
+        svg.append("g")
+            .attr("class","legend")
+            .attr("transform","translate(50,30)")
+            .style("font-size","12px")
+            .call(d3.legend)
     }
     drawTempVSDis(temp, disaster);
 </script>
