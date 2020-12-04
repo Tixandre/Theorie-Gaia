@@ -31,7 +31,7 @@
  [x] Avoir la température entre deux dates (moyenne mondiale)
  [x] Avoir le nombre de catastrophe monde entre deux dates
  
- [ ] Avoir les data qui correspondent à une date (si elle existe ou prendre la plus proche dans le passé si elle existe pas) peut importe le dataset 
+ [x] Avoir les data qui correspondent à une date (si elle existe ou prendre la plus proche dans le passé si elle existe pas) peut importe le dataset 
 
 
  # Utilisation des fonctions
