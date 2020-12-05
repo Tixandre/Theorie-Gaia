@@ -23,8 +23,12 @@ function mapDisasterTypes(d) {
  * @returns An array of objects ```[{ date: "1900-01-01", temp: 25.5 }]```
  */
 function getTemperatureTrend(temperatures) {
+    let last = 0;
     let data = temperatures.reduce(function(rv, x) {
         let y = getYear(x.date);
+        if (parseInt(y) > last) {
+            last = y;
+        }
         let d = (rv[y] || { t: 0, n: 0});
         d.t += x.temp;
         d.n += 1;
@@ -35,8 +39,10 @@ function getTemperatureTrend(temperatures) {
     let res = [];
     for (const y in data) {
         if (data.hasOwnProperty(y)) {
-            let d = data[y];
-            res.push({ date: y, temp: (d.t/d.n) });
+            if (parseInt(y) != last) {
+                let d = data[y];
+                res.push({ date: y, temp: (d.t/d.n) });
+            }
         }
     }
     return res;
@@ -183,7 +189,7 @@ function getDisasters(dateFrom, dateTo) {
  * @returns An array of objects ```[{ date: "1900-01-01", temp: 25.5 }]```
  */
 function getTemperatures(dateFrom, dateTo) {
-    return dataTemperatures.filter(d => d.dt >= dateFrom && d.dt <= dateTo).map(d => {
+    return dataTemperatures.filter(d => getMonth(d.dt) >= getMonth(dateFrom) && getMonth(d.dt) <= getMonth(dateTo)).map(d => {
         let sum = 0;
         let cnt = 0;
         for (let t in d.data) {
