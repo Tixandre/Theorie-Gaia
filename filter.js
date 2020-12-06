@@ -46,9 +46,7 @@ function updateGroupEnabling(container, changedElement) {
     });
 
     rec.forEach(el => {
-        console.log(el);
         if (!$(el).prop('checked')) {
-            console.log('yes');
             updateGroupEnabling(container, el);
         }
     });
