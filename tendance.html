@@ -333,14 +333,14 @@
             <div class="row">
                 <div class="graphs col-10" style="max-width: 1260px;">
                     <div class="card mt-2">
-                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the number of disasters over time</h1>
+                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the number of disasters over time in <span class="cnt">World</span></h1>
                         <div id="temp_cata">
                         </div>
                         <p class="sources text-right mr-4 ml-4">Sources : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data<br/>
                             EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/</p>
                     </div>
                     <div class="card mt-4">
-                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the CO2 level in atmosphere over time</h1>
+                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the CO2 level in atmosphere over time in <span class="cnt">World</span></h1>
                         <div id="temp_co2">
                         </div>
                         <p class="sources text-right mr-4 ml-4">Sources : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data<br/>
@@ -348,7 +348,7 @@
                             Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html</p>
                     </div>
                     <div class="card mt-4 mb-4">
-                        <h1 class="p-2 ml-3 mr-3">Correlation between the CO2 level in atmosphere and the number of disasters over time</h1>
+                        <h1 class="p-2 ml-3 mr-3">Correlation between the CO2 level in atmosphere and the number of disasters over time in <span class="cnt">World</span></h1>
                         <div id="co2_disa">
                         </div>
                         <p class="sources text-right mr-4 ml-4">Sources : EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/<br/>
@@ -426,6 +426,7 @@
             drawTempVSDis(temp,trend, disaster);
             drawTempVSCO2(temp,trend, co2);
             drawCO2VSDis(co2, disaster);
+            $('.cnt').text($('#listCountry option[value=' + $('#country').val() + ']').text());
             change = false;
         }
         lastVal = val;
