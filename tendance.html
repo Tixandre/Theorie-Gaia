@@ -568,6 +568,7 @@
         // Add the Y Axis
         svg.append("g")
             .call(d3.axisLeft(y0));
+
         svg.append("g")
             .attr("transform", "translate(" + width + " ,0)")	
             .call(d3.axisRight(y1));
@@ -575,6 +576,33 @@
         svg.append("g")
             .attr("class", "legendOrdinal")
             .attr("transform", "translate(1000,450)");
+
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text("Time (years)");
+        
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", width-15)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("# of disasters");
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", 6)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("Degree (°C)");
+
+
         
         svg.select(".legendOrdinal")
             .call(legendOrdinal);
@@ -670,6 +698,32 @@
         svg2.append("g")
             .attr("class", "legendOrdinal")
             .attr("transform", "translate(1000,450)");
+
+        svg2.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text("Time (years)");
+        
+        svg2.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", width-15)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("CO2 level (ppm)");
+
+        svg2.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", 6)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("Degree (°C)");
+
         
         svg2.select(".legendOrdinal")
             .call(legendOrdinal2);
@@ -765,6 +819,31 @@
         svg3.append("g")
             .attr("class", "legendOrdinal")
             .attr("transform", "translate(1000,450)");
+        
+        svg3.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width)
+            .attr("y", height - 6)
+            .text("Time (years)");
+        
+        svg3.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", width-15)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("CO2 level (ppm)");
+
+        svg3.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -50)
+            .attr("y", 6)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("# of disasters");
         
         svg3.select(".legendOrdinal")
             .call(legendOrdinal2);
