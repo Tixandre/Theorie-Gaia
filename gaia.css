@@ -77,26 +77,24 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     width: 100%;
     text-align: left;
     font: normal 16px sans-serif;
-    padding-top: 45px;
+    padding-top: 15px;
     padding-right: 50px;
-    padding-bottom: 25px;
+    padding-bottom: 15px;
     padding-left: 50px;
     color: #212529;
+    height: auto;
+}
+.footer-distributed p {
+    margin-bottom: 0;
 }
 
 main {
     min-height: 100%;
-    margin-bottom: -104px;
 }
 
 main:after {
     content: "";
     display: block;
-}
-
-footer,
-main:after {
-    height: 104px;
 }
 
 body,
@@ -105,4 +103,26 @@ html {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.sources {
+    font-size: 10pt;
+}
+
+label.disa {
+    width: 100%;
+    display: block;
+    margin-bottom: .1rem;
+}
+.disa.sg {
+    margin-left: 1.6rem;
+}
+.disa.t {
+    margin-left: 2.6rem;
+}
+.disa.st {
+    margin-left: 3.6rem;
+}
+label.disa input {
+    margin-right: 0.2rem;
 }

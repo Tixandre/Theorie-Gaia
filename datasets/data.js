@@ -43,7 +43,12 @@ function getTemperatureTrend(temperatures) {
     let res = [];
     for (const y in data) {
         if (data.hasOwnProperty(y)) {
-            if (parseInt(y) != last) {
+            if (parseInt(y) == last) {
+                let d = data[(parseInt(y)-1).toString()];
+                if (d != undefined) {
+                    res.push({ date: y, temp: (d.t/d.n) });
+                }
+            } else {
                 let d = data[y];
                 res.push({ date: y, temp: (d.t/d.n) });
             }
