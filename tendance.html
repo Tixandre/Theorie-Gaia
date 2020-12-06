@@ -331,7 +331,7 @@
                 </div>
             </form>
             <div class="row">
-                <div class="graphs col-10" style="max-width: 1250px;">
+                <div class="graphs col-10" style="max-width: 1260px;">
                     <div class="card mt-2">
                         <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the number of disasters over time</h1>
                         <div id="temp_cata">
@@ -459,7 +459,7 @@
             top: 40,
             right: 75,
             bottom: 30,
-            left: 40
+            left: 30
         },
         width = 1260 - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
@@ -568,6 +568,7 @@
         svg.append("g")
             .call(d3.axisLeft(y0));
         svg.append("g")
+            .attr("transform", "translate(" + width + " ,0)")	
             .call(d3.axisRight(y1));
 
         svg.append("g")
@@ -662,6 +663,7 @@
         svg2.append("g")
             .call(d3.axisLeft(y0));
         svg2.append("g")
+            .attr("transform", "translate(" + width + " ,0)")	
             .call(d3.axisRight(y1));
 
         svg2.append("g")
@@ -756,6 +758,7 @@
         svg3.append("g")
             .call(d3.axisLeft(y2));
         svg3.append("g")
+            .attr("transform", "translate(" + width + " ,0)")	
             .call(d3.axisRight(y3));
 
         svg3.append("g")
