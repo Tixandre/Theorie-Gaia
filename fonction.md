@@ -56,12 +56,12 @@ TODO :
  - [] Page A propos et README (même contenu)
  - [] légendes graphs et map
  - [] click pays redirige vers tendance
- - [] droite de tendance pour temperature
+ - [x] droite de tendance pour temperature
  - [] intégrer map to site
  - [] organiser le site avec index.html (théorie Gaia)
  - [] catastrophe sur la map
  - [] choisir le pas pour tendances
- - [] remove last year of trend
+ - [x] remove last year of trend
 
 
  Doc :
