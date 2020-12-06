@@ -7,13 +7,17 @@ function getMonth(dt) {
 function getYear(dt) {
     return dt.split("-")[0];
 }
+function getFId(disa) {
+    return disa.subgroup + '-' + disa.type + (disa.subtype == "-1" ? '' : ('-' + disa.subtype));
+}
 function mapDisasterTypes(d) {
-    let sg = dataDisasterTypes.find(x => x.id == d.subgroup) || { name: "", types: [] };
-    let t = sg.types.find(x => x.id == d.type) || { name: "", subtypes: [] };
-    d.subgroup = sg.name;
-    d.type = t.name;
-    d.subtype = (t.subtypes.find(x => x.id == d.subtype) || { name: "" }).name;
-    return d;
+    let nd = Object.assign({}, d);
+    let sg = dataDisasterTypes.find(x => x.id == parseInt(d.subgroup)) || { name: "", types: [] };
+    let t = sg.types.find(x => x.id == parseInt(d.type)) || { name: "", subtypes: [] };
+    nd.subgroup = sg.name;
+    nd.type = t.name;
+    nd.subtype = (t.subtypes.find(x => x.id == parseInt(d.subtype)) || { name: "" }).name;
+    return nd;
 }
 
 /**
@@ -104,10 +108,11 @@ function getCO2ByMonth(date) {
  * @param {string} isoCode Country ISO-3 code
  * @param {string} dateFrom Date range start, included
  * @param {string} dateTo Date range stop, included
+ * @param {array} filters The selected filters, all if not given
  * @returns An array of objects ```[{ date: "1900", disa: 5 }, { date: "1901", disa: 1 }]```
  */
-function getDisastersByCountry(isoCode, dateFrom, dateTo) {
-    let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && d.ISO == isoCode).reduce(function(rv, x) {
+function getDisastersByCountry(isoCode, dateFrom, dateTo, filters = undefined) {
+    let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && d.ISO == isoCode && (filters == undefined || filters.includes(getFId(d)))).reduce(function(rv, x) {
         let m = getYear(x.dt);
         rv[m] = (rv[m] || 0) + 1;
         return rv;
@@ -129,11 +134,12 @@ function getDisastersByCountry(isoCode, dateFrom, dateTo) {
  * 
  * @param {string} date Date in the given month
  * @param {string} isoCode Country ISO-3 code. If not given, return the disasters for all countries.
+ * @param {array} filters The selected filters, all if not given
  * @returns An array of objects ```[{ dt: "1900-01-01", subgroup: "0", ... }]``` if isoCode specified, else an object ```{ "CHE": [{ dt: "1900-01-01", subgroup: "0", ... }], "IND": ... }```
  */
-function getDisastersByMonth(date, isoCode = undefined) {
+function getDisastersByMonth(date, isoCode = undefined, filters = undefined) {
     let m = getMonth(date);
-    let data = dataDisasters.filter(d => getMonth(d.dt) == m && (isoCode == undefined || d.ISO == isoCode)).map(mapDisasterTypes).reduce(function(rv, x) {
+    let data = dataDisasters.filter(d => getMonth(d.dt) == m && (isoCode == undefined || d.ISO == isoCode) && (filters == undefined || filters.includes(getFId(d)))).map(mapDisasterTypes).reduce(function(rv, x) {
         (rv[x.ISO] = rv[x.ISO] || []).push(x);
         return rv;
       }, {});
@@ -161,10 +167,11 @@ function getTemperaturesByMonth(date) {
  * 
  * @param {string} dateFrom Date range start, included
  * @param {string} dateTo Date range stop, included
+ * @param {array} filters The selected filters, all if not given
  * @returns An array of objects ```[{ date: "1900-01", disa: 5 }, { date: "1900-04", disa: 1 }]```
  */
-function getDisasters(dateFrom, dateTo) {
-    let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo).reduce(function(rv, x) {
+function getDisasters(dateFrom, dateTo, filters = undefined) {
+    let data = dataDisasters.filter(d => d.dt >= dateFrom && d.dt <= dateTo && (filters == undefined || filters.includes(getFId(d)))).reduce(function(rv, x) {
         let m = getYear(x.dt);
         rv[m] = (rv[m] || 0) + 1;
         return rv;
