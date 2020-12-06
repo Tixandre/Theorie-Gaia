@@ -11,8 +11,10 @@ A partir du paramètre de la température du globe et du taux de CO2 au fil des 
 
 ### Source des données
 
-- https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data
-- https://public.emdat.be/
+- Température : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data
+- Catastrophes : EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/
+- CO2 (1958-2018) : Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html
+- CO2 (1900-1958) : Ice-Core Data, https://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt
 
 ### Technologies utilisées
 
