@@ -332,6 +332,14 @@
             </form>
             <div class="row">
                 <div class="graphs col-10" style="max-width: 1260px;">
+                    <div class="card mt-4 mb-4">
+                        <h1 class="p-2 ml-3 mr-3">Correlation between the CO<sub>2</sub> level in atmosphere and the number of disasters over time in <span class="cnt">World</span></h1>
+                        <div id="co2_disa">
+                        </div>
+                        <p class="sources text-right mr-4 ml-4">Sources : EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/<br/>
+                            Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html<br/>
+                            Ice-Core Data, https://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt</p>
+                    </div>
                     <div class="card mt-2">
                         <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the number of disasters over time in <span class="cnt">World</span></h1>
                         <div id="temp_cata">
@@ -340,20 +348,12 @@
                             EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/</p>
                     </div>
                     <div class="card mt-4">
-                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the CO2 level in atmosphere over time in <span class="cnt">World</span></h1>
+                        <h1 class="p-2 ml-3 mr-3">Correlation between the temperature and the CO<sub>2</sub> level in atmosphere over time in <span class="cnt">World</span></h1>
                         <div id="temp_co2">
                         </div>
                         <p class="sources text-right mr-4 ml-4">Sources : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data<br/>
                             Ice-Core Data, https://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt<br/>
                             Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html</p>
-                    </div>
-                    <div class="card mt-4 mb-4">
-                        <h1 class="p-2 ml-3 mr-3">Correlation between the CO2 level in atmosphere and the number of disasters over time in <span class="cnt">World</span></h1>
-                        <div id="co2_disa">
-                        </div>
-                        <p class="sources text-right mr-4 ml-4">Sources : EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/<br/>
-                            Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html<br/>
-                            Ice-Core Data, https://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt</p>
                     </div>
                 </div>
                 <div class="filters col">
@@ -534,7 +534,7 @@
         });
 
 
-        y0.domain([-20, 45]);
+        y0.domain([-40, 45]);
         y1.domain([0, MaxDis]);
 
 
