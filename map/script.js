@@ -1,7 +1,6 @@
 var dataFromFile;
 var width;
 var height;
-var world;
 var countries;
 
 // Color to the graph
@@ -29,7 +28,7 @@ function createHeight(width) {
     return dy;
 }
 
-function createChart(width, height, world, data, disasters) {
+function createChart(width, height, data, disasters) {
     {
         const svg = d3.create("svg")
             .style("display", "block")
@@ -132,30 +131,12 @@ function showLegend() {
         .call(legendLinear);
 }
 
-var isoToCoord;
-
 function init() {
+    countries = topojson.feature(world, world.objects.countries);
+    width = 975;
+    height = createHeight(width, projection);
 
-    fetch('countries-50m.json').then(x => x.json()).then(x => {
-
-        world = x;
-        countries = topojson.feature(world, world.objects.countries);
-        width = 975;
-
-        height = createHeight(width, projection);
-        fetch('countries_codes_and_coordinates.csv').then(x => x.text()).then(csv => {
-            let lines = csv.split("\n");
-            var localResult = {};
-            lines.forEach(line => {
-                let currentLine = line.split(",");
-                if (currentLine[2].length != 3)
-                    console.log(currentLine[2]);
-                localResult[currentLine[2]] = [parseFloat(currentLine[5]), parseFloat(currentLine[4])];
-            })
-            isoToCoord = localResult
-            update(true);
-        })
-    })
+    update(true);
 }
 
 var lastYear = 1900;
@@ -174,7 +155,7 @@ function update(change = false) {
         let filters = createFilterArray($('#filters'));
         let disasters = getDisastersByMonth(year + "-" + month + "-01", undefined, filters);
         // Show new data
-        chart = createChart(width, height, world, data, disasters);
+        chart = createChart(width, height, data, disasters);
         $('#temp_cata').append(chart);
         // document.body.append(chart);
         showLegend();
