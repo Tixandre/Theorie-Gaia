@@ -426,7 +426,7 @@
             drawTempVSDis(temp,trend, disaster);
             drawTempVSCO2(temp,trend, co2);
             drawCO2VSDis(co2, disaster);
-            $('.cnt').text($('#listCountry option[value=' + $('#country').val() + ']').text());
+            $('.cnt').text($('#listCountry option[value=' + country + ']').text());
             change = false;
         }
         lastVal = val;
@@ -582,7 +582,7 @@
             .attr("text-anchor", "end")
             .attr("x", width)
             .attr("y", height - 6)
-            .text("Time (years)");
+            .text("Time [years]");
         
         svg.append("text")
             .attr("class", "y label")
@@ -600,7 +600,7 @@
             .attr("y", 6)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("Degree (°C)");
+            .text("Degree [°C]");
 
 
         
@@ -704,7 +704,7 @@
             .attr("text-anchor", "end")
             .attr("x", width)
             .attr("y", height - 6)
-            .text("Time (years)");
+            .text("Time [years]");
         
         svg2.append("text")
             .attr("class", "y label")
@@ -713,7 +713,7 @@
             .attr("y", width-15)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("CO2 level (ppm)");
+            .text("CO2 level [ppm]");
 
         svg2.append("text")
             .attr("class", "y label")
@@ -722,7 +722,7 @@
             .attr("y", 6)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("Degree (°C)");
+            .text("Degree [°C]");
 
         
         svg2.select(".legendOrdinal")
@@ -825,7 +825,7 @@
             .attr("text-anchor", "end")
             .attr("x", width)
             .attr("y", height - 6)
-            .text("Time (years)");
+            .text("Time [years]");
         
         svg3.append("text")
             .attr("class", "y label")
@@ -834,7 +834,7 @@
             .attr("y", width-15)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("CO2 level (ppm)");
+            .text("CO2 level [ppm]");
 
         svg3.append("text")
             .attr("class", "y label")
