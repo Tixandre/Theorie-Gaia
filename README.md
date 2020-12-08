@@ -1,27 +1,57 @@
-# Theorie-Gaia
+# La Théorie Gaia
 
-## Résumé du projet
+## Description du projet
+
+À travers ce projet, nous cherchons à montrer que l'augmentation du taux de CO~2~ dans l'atmosphère ainsi que de la température mondiale a un impact sur le nombre de catastrophes naturelles qui se produisent sur le globe.
+Pour cela, nous avons conçu un site web contenant une carte du monde offrant une vue globale et des graphiques de tendance pour chaque pays.
+
+Nous utilisons quatre sets de données provenant de sources différentes (indiquées plus bas). Le premier concerne la température dans chaque pays au cours des 100 dernières années, le second recense toutes les catastrophes survenues dans le monde depuis 1900 et les deux derniers contiennent les taux de CO~2~ mondial entre 1900 et 1958 pour le premier, puis entre 1958 et 2018 pour le second. Le premier set de données de CO~2~ a des données annuelles tandis que le second et celui des températures ont des données mensuelles.
+
+Le projet ne nécessite pas de serveur, il suffit de lancer le fichier ```index.html``` à la racine du projet.
 
 ### Public cible
 
-Climatosceptiques majoritairement et toute personne souhaitant s'informer sur le sujet
+Notre public cible est majoritairement les climatosceptiques pour leur montrer que le réchauffement climatique est réel et que cela a un impact, mais aussi toute autre personne souhaitant s'informer sur le sujet.
 
-### Descriptif du projet
-A partir du paramètre de la température du globe et du taux de CO2 au fil des années nous cherchons à montrer que le nombre et l'importance des catastrophes naturelles sont liés à la variation de ce dernier.
+### Sources de données
 
-### Source des données
-
-- Température : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data
+- Températures : Earth Surface Temperature Data, https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data
 - Catastrophes : EM-DAT, CRED / UCLouvain, Brussels, Belgium, https://public.emdat.be/
 - CO2 (1958-2018) : Mauna Loa Observatory, Hawaii, https://datahub.io/core/co2-ppm/r/0.html
 - CO2 (1900-1958) : Ice-Core Data, https://data.giss.nasa.gov/modelforce/ghgases/Fig1A.ext.txt
 
-### Technologies utilisées
+### Membres du groupe
 
- - Bootstrap 4
- 
-## Groupe
  - Favre Alexandre
  - Mendes Lourenço Miguel
  - Riondet Guillaume
  - von der Weid Joël
+
+## Partie visualisation de l'information
+
+Le projet est séparé en deux type de visualisations : une carte du monde affichant les températures et les catastrophes du mois sélectionné, ainsi que des line charts montrant la corrélation entre température et catastrophes, température et taux de CO~2~ et enfin taux de CO~2~ et catastrophes, le tout au cours du temps.
+
+### Carte du monde
+
+La carte du monde est la vue d'accueil du site. Il s'agit d'une carte de chaleur représentant la température des pays du monde durant le mois sélectionné. Un curseur permet de choisir l'année et le mois à afficher entre 1900 et 2013 qui sont les bornes de nos sets de données. Un bouton d'animation permettant de faire défilé les mois et de voir l'évolution en direct est aussi disponible.
+Un filtre permet de choisir quels types de catastrophes afficher afin de voir lesquelles sont le plus liées aux changements de température.
+
+Le choix d'utiliser cette représentation est qu'elle est très visuel et permet d'avoir une vision globale. C'est également une représentation plus attractive que des graphiques permettant d'attirer le regard et d'intéresser les visiteurs du site, qui pourront ensuite cliquer sur un pays pour afficher les graphiques de tendances donnant des données plus précises sur le temps.  **TODO expliquer les choix pour la carte (couleurs, type, interaction, utilisabilité, permet de voir lien entre position du chaud et des catastrophes, etc)**
+
+### Line charts
+
+Il y a trois graphiques pour chaque pays.
+Le premier graphique représente l'évolution du taux de CO~2~ et du nombre de catastrophes au cours des mois. Il contient une courbe du taux de CO~2~ et des points représentant le nombre de catastrophes durant chaque mois.
+Le second représente l'évolution de la température et du nombre de catastrophes au cours des mois. Il contient une courbe de température, une courbe de tendance de la température qui est une moyenne annuel et des points représentant le nombre de catastrophes durant chaque mois.
+Le dernier graphique représente l'évolution de la température et du taux de CO~2~ pour pouvoir comparer leur évolution au cours des mois.
+
+**TODO expliquer choix des graphiques, interaction et utilisabilité**
+
+Les couleurs des courbes et des points ont été choisies pour être différenciables par des daltoniens.
+
+## Partie technique
+
+Le projet a été réalisé sous la forme d'un site web interactif. L'ensemble du traitement est fait en Javascript, coté client, afin que le site de nécessite pas de serveur pour fonctionner, il suffit de lancer le fichier ```index.html``` à la racine du projet.
+
+Le Framework Bootstrap 4 a été utilisé pour le design général du site et la librairie D3.js a été utilisée pour générer la carte du monde ainsi que les différents graphiques.
+
