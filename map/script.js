@@ -29,7 +29,7 @@ function createHeight(width) {
     return dy;
 }
 
-function createChart(width, height, world, data) {
+function createChart(width, height, world, data, disasters) {
     {
         const svg = d3.create("svg")
             .style("display", "block")
@@ -47,8 +47,6 @@ function createChart(width, height, world, data) {
 
         const g = svg.append("g")
 
-        g.append("use")
-            .attr("fill", "white");
 
         g.append("g")
             .selectAll("path")
@@ -56,6 +54,9 @@ function createChart(width, height, world, data) {
             .join("path")
             .attr("fill", d => colorScale(data.get(d.properties.iso)))
             .attr("d", path)
+            .attr("iso", d => d.properties.iso)
+            .attr("cursor", "pointer")
+            .on("click", clicked)
             .append("title")
             .text(d => `${d.properties.name}
       ${data.has(d.properties.iso) && data.get(d.properties.iso) != "-" ? data.get(d.properties.iso) : "N/A"}`);
@@ -71,10 +72,34 @@ function createChart(width, height, world, data) {
             .attr("fill", "none")
             .attr("stroke", "black");
 
+        // add circles to svg
+
+        let coords = [];
+        for (k in disasters) {
+            if (isoToCoord[k])
+                coords.push(isoToCoord[k])
+        }
+        svg.selectAll("circle")
+            .data(coords).enter()
+            .append("circle")
+            .attr("cx", function (d) {
+
+                // console.log(projection(d));
+                return projection(d)[0];
+            })
+            .attr("cy", function (d) {
+                return projection(d)[1];
+            })
+            .attr("r", "4px")
+            .attr("fill", "red")
         return svg.node();
     }
 }
 
+function clicked(event, d) {
+    console.log(d);
+    location.href = "tendance.html?iso=" + d.properties.iso;
+}
 
 function getData(date) {
     dataFromFile = getTemperaturesByMonth(date);
@@ -91,7 +116,7 @@ function showLegend() {
 
     svg.append("g")
         .attr("class", "legendLinear")
-        .attr("transform", "translate(0,20)");
+        .attr("transform", "translate(10,20)");
 
     var legendLinear = d3.legendColor()
         .title("Temperature hue [°C]")
@@ -107,7 +132,10 @@ function showLegend() {
         .call(legendLinear);
 }
 
+var isoToCoord;
+
 function init() {
+
     fetch('countries-50m.json').then(x => x.json()).then(x => {
 
         world = x;
@@ -115,25 +143,72 @@ function init() {
         width = 975;
 
         height = createHeight(width, projection);
-
-        let data = getData("1900-01-01");
-        chart = createChart(width, height, world, data);
-        document.body.append(chart);
-        showLegend();
+        fetch('countries_codes_and_coordinates.csv').then(x => x.text()).then(csv => {
+            let lines = csv.split("\n");
+            var localResult = {};
+            lines.forEach(line => {
+                let currentLine = line.split(",");
+                if (currentLine[2].length != 3)
+                    console.log(currentLine[2]);
+                localResult[currentLine[2]] = [parseFloat(currentLine[5]), parseFloat(currentLine[4])];
+            })
+            isoToCoord = localResult
+            update(true);
+        })
     })
 }
 
-function update() {
-    // Delete old map
-    d3.select("svg").remove();
+var lastYear = 1900;
+var lastMonth = 1;
 
-    let annee = document.getElementById("annee").value;
+function update(change = false) {
+    let year = slider.getValue();
+    let month = sliderMonth.getValue();
 
-    let data = getData(annee + "-01-01");
+    if (lastYear != year || lastMonth != month || change) {
+        // Delete old map
+        d3.select("svg").remove();
 
-    // Show new data
-    chart = createChart(width, height, world, data);
-    document.body.append(chart);
-    showLegend();
+
+        let data = getData(year + "-" + month + "-01");
+        let filters = createFilterArray($('#filters'));
+        let disasters = getDisastersByMonth(year + "-" + month + "-01", undefined, filters);
+        // Show new data
+        chart = createChart(width, height, world, data, disasters);
+        $('#temp_cata').append(chart);
+        // document.body.append(chart);
+        showLegend();
+        lastYear = year;
+        lastMonth = month;
+    }
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function test() {
+    for (year = 1900; year < 2013; ++year) {
+        slider.setValue(year, true);
+        sliderMonth.setValue(1, true);
+        for (i = 0; i < 12; ++i) {
+            sliderMonth.setValue(i + 1, true);
+        }
+    }
+}
+
+function refresh() {
+    let country = $("#country").val() !== "" ? $("#country").val() : "WRD";
+    location.href = "tendance.html?iso=" + country;
+}
+var slider = $("#ex2").slider()
+    .on('slide', () => update())
+    .data('slider');
+
+var sliderMonth = $("#month").slider()
+    .on('slide', () => update())
+    .data('slider');
+
+generateFilterNav($('#filters'), () => update(true));
+
 init();
