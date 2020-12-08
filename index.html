@@ -32,10 +32,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">World map <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="./index.html">World map <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Graphs</a>
+                        <a class="nav-link" href="./tendance.html">Graphs</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
@@ -301,7 +301,6 @@
             </div>
         </nav>
     </header>
-    <button onclick="test()">test</button>
     <div class="container" style="max-width: 1600px;">
         <form class="mr-4 ml-4">
             <div class="text-center">
@@ -327,6 +326,10 @@
                 </table>
             </div>
         </form>
+        <div class="row">
+            <button type="button" class="btn btn-primary mx-auto" onclick="test()">Launch the
+                timelapse</button>
+        </div>
         <div class="row">
             <div class="graphs col-10" style="max-width: 1260px;">
                 <div class="card mt-2">
@@ -361,13 +364,13 @@
 <script src="https://unpkg.com/topojson-client@3"></script>
 <!--<script src="https://unpkg.com/d3-require@1"></script>-->
 <!--<script src="https://cdn.jsdelivr.net/npm/@observablehq/stdlib"></script>-->
-<script src="../datasets/temperatures.js"></script>
-<script src="../datasets/data.js"></script>
-<script src="../datasets/disasters.js"></script>
-<script src="../datasets/disaster_types.js"></script>
-<script src="./countries-50m.js"></script>
-<script src="./countries_codes_and_coordinates.js"></script>
-<script src="../filter.js"></script>
-<script src="script.js"></script>
+<script src="./datasets/temperatures.js"></script>
+<script src="./datasets/data.js"></script>
+<script src="./datasets/disasters.js"></script>
+<script src="./datasets/disaster_types.js"></script>
+<script src="./map/countries-50m.js"></script>
+<script src="./map/countries_codes_and_coordinates.js"></script>
+<script src="./filter.js"></script>
+<script src="./map/script.js"></script>
 
 </html>

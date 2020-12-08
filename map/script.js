@@ -169,11 +169,12 @@ function sleep(ms) {
 }
 
 async function test() {
-    for (year = 1900; year < 2013; ++year) {
+    for (let year = 1900; year < 2013; ++year) {
         slider.setValue(year, true);
         sliderMonth.setValue(1, true);
         for (i = 0; i < 12; ++i) {
             sliderMonth.setValue(i + 1, true);
+            await sleep(1);
         }
     }
 }
