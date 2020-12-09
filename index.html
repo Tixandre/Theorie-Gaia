@@ -11,8 +11,12 @@
     <link rel="stylesheet" href="./gaia.css">
 
     <style>
-        .label {
+        .legendLinear .label {
             font-size: 6pt;
+        }
+
+        .legendOrdinal .label {
+            font-size: 8pt;
         }
 
         .legendTitle {
@@ -327,7 +331,7 @@
             </div>
         </form>
         <div class="row">
-            <button type="button" class="btn btn-primary mx-auto" onclick="test()">Launch the
+            <button type="button" class="btn btn-primary mx-auto" id="btnAnim" onclick="mapAnimation()">Launch the
                 timelapse</button>
         </div>
         <div class="row">

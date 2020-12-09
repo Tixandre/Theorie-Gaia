@@ -89,8 +89,8 @@ function createChart(width, height, data, disasters) {
             .attr("cy", function (d) {
                 return projection(d)[1];
             })
-            .attr("r", "4px")
-            .attr("fill", "red")
+            .attr("r", "3px")
+            .attr("fill", "black")
         return svg.node();
     }
 }
@@ -129,6 +129,21 @@ function showLegend() {
 
     svg.select(".legendLinear")
         .call(legendLinear);
+
+    svg.append("g")
+        .attr("class", "legendOrdinal")
+        .attr("transform", "translate(15,80)");
+
+    var ordinal = d3.scaleOrdinal()
+        .domain(["Country with disaster"])
+        .range(["black"]);
+
+    var legendOrdinal = d3.legendColor()
+        .shape("path", d3.symbol().type(d3.symbolCircle).size(80)())
+        .scale(ordinal);
+
+    svg.select(".legendOrdinal")
+        .call(legendOrdinal);
 }
 
 function init() {
@@ -157,7 +172,6 @@ function update(change = false) {
         // Show new data
         chart = createChart(width, height, data, disasters);
         $('#temp_cata').append(chart);
-        // document.body.append(chart);
         showLegend();
         lastYear = year;
         lastMonth = month;
@@ -168,15 +182,21 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function test() {
-    for (let year = 1900; year < 2013; ++year) {
-        slider.setValue(year, true);
-        sliderMonth.setValue(1, true);
-        for (i = 0; i < 12; ++i) {
-            sliderMonth.setValue(i + 1, true);
+
+var animationInProgress = false;
+async function mapAnimation() {
+    if (animationInProgress) {
+        $("#btnAnim").text("Launch the timelapse");
+        animationInProgress = false;
+    } else {
+        $("#btnAnim").text("Pause the timelapse");
+        animationInProgress = true;
+        for (let year = slider.getValue(); year < 2013 && animationInProgress; ++year) {
+            slider.setValue(year, true);
             await sleep(1);
         }
     }
+
 }
 
 function refresh() {
