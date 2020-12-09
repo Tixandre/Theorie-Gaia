@@ -36,7 +36,22 @@ Le projet est séparé en deux type de visualisations : une carte du monde affic
 La carte du monde est la vue d'accueil du site. Il s'agit d'une carte de chaleur représentant la température des pays du monde durant le mois sélectionné. Un curseur permet de choisir l'année et le mois à afficher entre 1900 et 2013 qui sont les bornes de nos sets de données. Un bouton d'animation permettant de faire défilé les mois et de voir l'évolution en direct est aussi disponible.
 Un filtre permet de choisir quels types de catastrophes afficher afin de voir lesquelles sont le plus liées aux changements de température.
 
-Le choix d'utiliser cette représentation est qu'elle est très visuel et permet d'avoir une vision globale. C'est également une représentation plus attractive que des graphiques permettant d'attirer le regard et d'intéresser les visiteurs du site, qui pourront ensuite cliquer sur un pays pour afficher les graphiques de tendances donnant des données plus précises sur le temps.  **TODO expliquer les choix pour la carte (couleurs, type, interaction, utilisabilité, permet de voir lien entre position du chaud et des catastrophes, etc)**
+Le choix d'utiliser cette représentation est qu'elle est très visuelle et permet d'avoir une vision globale. C'est également une représentation plus attractive que des graphiques permettant d'attirer le regard et d'intéresser les visiteurs du site, qui pourront ensuite cliquer sur un pays pour afficher les graphiques de tendances donnant des données plus précises sur le temps.  L'animation permettant de visualiser l'évolution des critères selectionnés au cours du temps en fixant le mois de l'année permet de suivre l'évolution sur une période de l'année.
+
+Deux critères sont représentés, par pays, sur cette carte :
+ - la température moyenne
+ - la présence de catastrophe naturelle 
+
+La température est représentée à l'aide de couleur allant du bleu foncé, pour le froid (-30°C), au rouge pour le chaud (+60°C). 
+La présence de catastrophe naturelle est représentée à l'aide d'un rond plein noir situé au centre du pays pour indiquer qu'une catastrophe naturelle a eu lieu sur le territoire du pays au cours du mois sélectionné.
+
+La vue mercator choisie pour la repésentation du monde permet une conservation des angles mais pas des distances. L'optique recherchée ici est d'offrir une visualisation simple du monde dans sa globalité. Les aspects distanciels ne sont pas requis pour la bonne compréhension du message, seul l'organisation et la forme des pays est nécéssaire. La vue mercator fournit donc ici une vue souvent utilisée pour la représentation du monde ce qui l'a rend rapidement compréhensible pour tout le public visé.
+
+La carte possède deux formes d'interaction au niveau de chaque pays :
+ - Le survol de la souris
+ - Le clic de la souris
+
+Le survol de la souris sur un pays permet de récupérer le nom du pays et la température du mois sélectionné. Le clic de la souris permet d'obtenir un niveau de détail supplémentaire en redirigeant l'utilisateur sur la page des line charts détaillée ci-après.
 
 ### Line charts
 
