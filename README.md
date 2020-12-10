@@ -60,7 +60,17 @@ Le premier graphique représente l'évolution du taux de CO~2~ et du nombre de c
 Le second représente l'évolution de la température et du nombre de catastrophes au cours des mois. Il contient une courbe de température, une courbe de tendance de la température qui est une moyenne annuel et des points représentant le nombre de catastrophes durant chaque mois.
 Le dernier graphique représente l'évolution de la température et du taux de CO~2~ pour pouvoir comparer leur évolution au cours des mois.
 
-**TODO expliquer choix des graphiques, interaction et utilisabilité**
+Le choix d'utiliser cette représentation est qu'elle est plus précise et premet de visualiser en détail de ce représenter plus facilement les données que la map. C'est une représentation moins attractive que la représentation de la map, mais est plus formelle. 
+
+Quatre données sont représentés, par pays, sur les différents graphes :
+ - la température
+ - la température moyenne
+ - le nombre de catastrophe naturelle
+ - le CO~2~ 
+
+La température est représentée à l'aide d'une ligne allant de (-40°C), à (+60°C). Cette ligne de température est aussi représentée par une courbe de tendance qui permet de visualisé mieux le changement des températures.
+La présence de catastrophe naturelle est représentée à l'aide d'un nuage de point plein rouge en fonction du pays choisi. 
+Le CO~2~ est représenté à l'aide d'une ligne qui permet de visualiser l'evolution du CO~2~ en fonction du temps.
 
 Les couleurs des courbes et des points ont été choisies pour être différenciables par des daltoniens.
 
