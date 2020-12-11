@@ -79,3 +79,5 @@ Les couleurs des courbes et des points ont été choisies pour être différenci
 Le projet a été réalisé sous la forme d'un site web interactif. L'ensemble du traitement est fait en Javascript, coté client, afin que le site de nécessite pas de serveur pour fonctionner, il suffit de lancer le fichier ```index.html``` à la racine du projet.
 
 Le Framework Bootstrap 4 a été utilisé pour le design général du site et la librairie D3.js a été utilisée pour générer la carte du monde ainsi que les différents graphiques.
+
+Le projet est disponible sur GitHub : https://github.com/Tixandre/Theorie-Gaia
