@@ -58,7 +58,8 @@ function createChart(width, height, data, disasters) {
             .on("click", clicked)
             .append("title")
             .text(d => `${d.properties.name}
-      ${data.has(d.properties.iso) && data.get(d.properties.iso) != "-" ? data.get(d.properties.iso).toFixed(2) + "°C" : "N/A"}`);
+      ${data.has(d.properties.iso) && data.get(d.properties.iso) != "-" ? data.get(d.properties.iso).toFixed(2) + "°C" : "N/A"}
+      ${d.properties.iso in disasters ? disasters[d.properties.iso].length + " disaster(s)" : ""}`);
 
         g.append("path")
             .datum(topojson.mesh(world, world.objects.countries, (a, b) => a !== b))
